@@ -1,0 +1,45 @@
+Resultados de la investigacion de hoy:
+
+
+El cliente debe participar en el onboarding hasta cierto punto (a menos que optemos por hacer scraping de sus datos).
+Necesitamos que nos proporcione un export de los datos de sus productos. Para facilitarlo:
+
+Le damos ejemplos del formato esperado.
+Garantizamos privacidad.
+Ofrecemos demo gratuita.
+Aceptamos varios formatos: SQL dump(como loque me has dado @Luis Ramirez de Medar) , CSV, Excel, JSON o API.
+
+En esta fase obtenemos datos “crudos”, que luego procesaremos mediante un ETL (Extract, Transform, Load) para adaptarlos a la estructura que requiere el sistema.
+
+¿Por qué? Porque usamos RAG.
+RAG (Retrieval-Augmented Generation) es un patrón arquitectónico, no es una "cosa": Se combina una red neuronal o algoritmo de similitud, el *RETRIEVER*, para buscar en la informacionn, con el *LLM* para dar respuestas bonitas. Se usa *LangChain* para mantener un "modo conversacional". ya que, las llamadas al LLM son "*stateless*",no hay memoria, el contexto se tiene que gestionar aparte e ir inyectandolo en cada llamada, tal que
+        *response = LLM(context + new_question)*
+
+el *retriever* Puede ser una red neuronal (p.ej. DPR) o un algoritmo de búsqueda por similitud. Lo importante aqui es que se usa *"busqueda semántica"*. Mejor que cualquier expresion regular o SQL (esto directamente descarta el enfoque de MCP server mas generacion de SQL). 
+
+Este *RETRIEVER* consulta una "base de datos vectorial" donde previamente cargamos los datos de productos de cada cliente y 
+determina qué información es relevante segun esa query. 
+
+Para montar el backend, necesitarioms *Pinecone* que te da el "retrieval" + la *"base de datos vectorizada"* 
+y *LangChain*, que es una libreria que no entiendo pero que permite orquestar todas estas cosas, el *retriver*, el *modo conversacional* y el *LLM*. 
+
+*En nuestro backend la arquitectura sería algo como*:
+
+ *LangChain (Python): hace posible el bot, orchesta las piezas
+ *Pinecone: retriever + vector database* 
+ *Proceso ETL*: iremos montando ETLs para poder adaptar cada ecomerce a un modelo estandar que a su vez será ingestado la base de datos vectorizada necesaria para implementar 
+ el patron RAG que estoy discutiendo. Esta es la parte variable del sistema. 
+              Parece mas dificil de lo que realmente es. Es un script the python basico al final. 
+              Si te descuidas ni eso, se pueden usar servicios aws como el aws glue muy potente para esto. 
+                    https://aws.amazon.com/es/glue/
+ *Human-in-the-loop (HITL)*: aqui, simplemente me refiero a casos de uso como el que dice @~pedro del pelapatas. 
+    puede ser que el *RETRIEVER* no sea capaz de encontrar ciertas busquedas. Por eso, nosotros mismos, humanos, iremos probando muchas cosas, y en donde falle, iremos 
+    	añadiendo datos al sistema para que deje de hacerlo.
+    	
+ *Monitorziacion*: Es por esto ultimo que, será necesario de alguna manera saber como monitorizar y e ir supervisandola actividad
+ 	para que se pueda ir aportando mas informacion y que los chats sean cada vez de mas calidad. 
+ 	
+
+  
+
+
