@@ -1,0 +1,67 @@
+openapi: 3.0.3
+info:
+  title: Red2Bot Chat API
+  version: 1.0.0
+  description: A simple chat API with session-based messaging.
+
+servers:
+  - url: https://api.example.com  # <-- replace with actual URL or API Gateway endpoint
+
+paths:
+  /chat/init:
+    get:
+      summary: Initialize a chat session
+      operationId: initChat
+      responses:
+        '200':
+          description: Session initialized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session_id:
+                    type: string
+                    example: "abc123"
+
+  /chat/{session_id}:
+    get:
+      summary: Send a message in a session
+      operationId: sendMessage
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: text
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "hello world"
+      responses:
+        '200':
+          description: Bot response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "Hi there!"
+
+  /chat/{session_id}/end:
+    get:
+      summary: End a chat session
+      operationId: endChat
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Session ended  
