@@ -1,0 +1,94 @@
+{
+  "type": "object",
+  "properties": {
+    "id":               { "type": "string" },
+    "title":            { "type": "string" },
+    "description":      { "type": "string" },
+    "brand":            { "type": "string" },
+    "category":         { "type": "string" },
+    "subcategory":      { "type": "string" },
+    "tags":             {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "price":            { "type": "number" },
+    "currency":         { "type": "string", "enum": ["USD", "EUR", "GBP", "JPY", "RON", "INR", "CNY", "BRL", "AUD", "CAD"] },
+    "discount":         { "type": "number" },
+    "original_price":   { "type": "number" },
+
+    "availability":     {
+      "type": "string",
+      "enum": ["in_stock", "out_of_stock", "preorder", "discontinued"]
+    },
+    "quantity":         { "type": "integer" },
+    "sku":              { "type": "string" },
+    "barcode":          { "type": "string" },
+
+    "color":            { "type": "string" },
+    "size":             { "type": "string" },
+    "material":         { "type": "string" },
+
+    "dimensions": {
+      "type": "object",
+      "properties": {
+        "height": { "type": "number" },
+        "width":  { "type": "number" },
+        "depth":  { "type": "number" },
+        "unit":   { "type": "string", "enum": ["cm", "inch", "mm"] }
+      },
+      "required": ["unit"],
+      "additionalProperties": false
+    },
+
+    "weight": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "number" },
+        "unit":  { "type": "string", "enum": ["kg", "g", "lb"] }
+      },
+      "required": ["value", "unit"],
+      "additionalProperties": false
+    },
+
+    "rating": {
+      "type": "object",
+      "properties": {
+        "average": { "type": "number" },
+        "count":   { "type": "integer" }
+      },
+      "required": ["average", "count"],
+      "additionalProperties": false
+    },
+
+    "image_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "additional_images": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" }
+    },
+
+    "release_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "vendor":            { "type": "string" },
+    "manufacturer":      { "type": "string" },
+    "country_of_origin": { "type": "string" },
+    "warranty":          { "type": "string" },
+    "return_policy":     { "type": "string" }
+  },
+  "required": ["id", "title", "description", "price"],
+  "additionalProperties": false
+}

@@ -1,2 +1,12 @@
-tokens
+.git
 .venv
+
+# Add terraform related stuff
+
+.terraform
+.terraform.lock.hcl
+
+*terraform.tfstate*
+
+
+# Add other stuff

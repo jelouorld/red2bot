@@ -1,5 +1,6 @@
 
 # S3 for website hosting
+/*
 resource "aws_s3_bucket" "website" {
     bucket = "red2bot-website"
 
@@ -43,3 +44,4 @@ EOF
 }    
 
 
+*/
