@@ -5,7 +5,7 @@ info:
   description: A simple chat API with session-based messaging.
 
 servers:
-  - url: https://api.example.com  # <-- replace with actual URL or API Gateway endpoint
+  - url: "null"  # <-- replace with actual URL or API Gateway endpoint
 
 paths:
   /chat/init:
