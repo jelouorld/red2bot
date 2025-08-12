@@ -4,9 +4,10 @@
 # Add terraform related stuff
 
 .terraform
-.terraform.lock.hcl
 
-*terraform.tfstate*
+*.tfstate
+*.tfstate.backup
+
 
 
 # Add other stuff

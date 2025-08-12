@@ -14,3 +14,6 @@ run cron jobs on aws:
         definetely possible. but this is an overkill. suitable for multistate
             highly complex pipes
 
+
+data hydration:
+    first stage in using an embedding model 
