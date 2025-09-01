@@ -7,10 +7,10 @@ data "archive_file" "lambda" {
 }
 
 resource "aws_lambda_function" "main" {
-    function_name    = "main"
+    function_name    = "red2bot"
     filename         = data.archive_file.lambda.output_path
     source_code_hash = data.archive_file.lambda.output_base64sha256
-    handler          = "main.main"
+    handler          = "red2bot.main"
     runtime          = "python3.13"
     timeout          = 900
     role             = aws_iam_role.main_lambda_execution_role.arn
