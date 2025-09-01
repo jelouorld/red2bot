@@ -92,3 +92,4 @@
   "required": ["id", "title", "description", "price"],
   "additionalProperties": false
 }
+
