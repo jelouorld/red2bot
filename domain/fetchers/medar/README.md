@@ -4,4 +4,4 @@ that's why it has this structure
 
 for now, we dont care
 
-we put our data stub generation code under ./main
+we put our data stub generation code under ./falke_main.py
