@@ -28,6 +28,11 @@ def lambda_entrypoint(event:dict, context:dict):
         'event': event
     }
 
+def lambda_entrypoint(event:dict, context:dict):
+    return {
+        'event': table.scan().get('Items', [])
+    }
+
 
 # if __name__ == '__main__':
 #     print(lambda_entrypoint(None, None))
