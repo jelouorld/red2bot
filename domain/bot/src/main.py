@@ -15,18 +15,6 @@ def decimal_decode(obj: d.Decimal):
 ddb=boto3.resource('dynamodb')
 table=ddb.Table('products')
 
-def lambda_entrypoint_old(event:dict, context:dict):
-
-    return {
-        'statusCode': 200,
-        'body': json.dumps(table.scan()['Items'], default=decimal_decode)
-    }
-
-
-def lambda_entrypoint(event:dict, context:dict):
-    return {
-        'event': event
-    }
 
 def lambda_entrypoint(event:dict, context:dict):
     return {

@@ -13,6 +13,12 @@ resource "aws_lambda_function" "medar_fetcher" {
     runtime          = "python3.13"
     timeout          = 900
     role             = aws_iam_role.medar_fetcher_lambda_execution_role.arn
+
+    environment {
+        variables = {
+            FETCHER_ENV="CLI_INVOKE"
+        }
+    }
 }
 
 

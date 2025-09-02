@@ -4,9 +4,13 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "jsonschema>=4.25.1",
+]
 
 [dependency-groups]
 dev = [
     "boto3>=1.40.21",
+    "ipython>=9.5.0",
+    "types-boto3[essential]>=1.40.21",
 ]
