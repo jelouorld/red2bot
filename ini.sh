@@ -19,6 +19,12 @@ alias gam="git add . && git commit -m "
 alias ali="aws lambda invoke --function-name "
 alias all="aws lambda list-functions"
 
+# aws shell functions 
+
+function ads() {
+    aws dynamodb scan --table-name $1 | jq 
+}
+
 
 # some env vars:
 export PYTHONDONTWRITEBYTECODE=1

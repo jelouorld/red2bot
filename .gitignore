@@ -13,3 +13,5 @@
 # Add other stuff
 conver_sample.txt
 __pycache__
+cli_inv_logs
+*.zip
