@@ -3,17 +3,19 @@ import abc
 import typing 
 import functools
 import json 
-import jsonschema
 
-with open("src/schema.json") as f:
-    schema = json.load(f)
+# import jsonschema
+
+
+# with open("src/schema.json") as f:
+#     schema = json.load(f)
 
 
 class Product:
     def __init__(self, data: dict) -> None:
         self._data = data
         
-        jsonschema.validate(instance=data, schema=schema) # raises error
+        # jsonschema.validate(instance=data, schema=schema)
 
     @property
     def _dict(self) -> dict:

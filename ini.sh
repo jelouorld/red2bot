@@ -14,6 +14,7 @@ alias gp="git push"
 alias gr="git restore ."
 alias gl="git pull"
 alias gam="git add . && git commit -m "
+alias gd="git diff"
 
 # aws aliases
 alias ali="aws lambda invoke --function-name "
@@ -24,6 +25,17 @@ alias all="aws lambda list-functions"
 function ads() {
     aws dynamodb scan --table-name $1 | jq 
 }
+
+function aws_lambda_invoke_and_log(){
+    function_name=$1
+    tempfile="__temp__$1"
+    touch $tempfile
+    aws lambda invoke --function-name $function_name $tempfile
+    e -----------------------------
+    cat $tempfile | jq # pretty format the response 
+    rm $tempfile # remove the temp file
+}
+
 
 
 # some env vars:

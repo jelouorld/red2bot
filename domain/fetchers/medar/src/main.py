@@ -52,7 +52,7 @@ def lambda_entrypoint(event, context):
         for name, dependency in deps.items()
     })
 
-    return {"statusCode": 200, "body": "code executed"}
+    return {"statusCode": 200, "body": result}
 
 if __name__ == "__main__":
     # enbles local run
