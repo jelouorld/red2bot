@@ -1,15 +1,31 @@
+
+[build-system]
+requires=["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+
+
 [project]
-name = "bot"
+name = "red20bot"
 version = "0.1.0"
-description = "Add your description here"
+description = "Serverless conversational bot"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "boto3", 
+]
 
 [dependency-groups]
 dev = [
     "boto3>=1.40.21",
     "ipdb>=0.13.13",
-    "pytest>=8.4.1",
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
     "requests>=2.32.5",
+    "isort",
+    "black", 
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+addopts="--cov=src"

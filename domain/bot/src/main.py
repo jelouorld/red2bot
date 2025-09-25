@@ -1,31 +1,22 @@
-
 import boto3
-
 import json
-
-import decimal as d 
-
-
-def decimal_decode(obj: d.Decimal):
-    if isinstance(obj, d.Decimal):
-        return float(obj)
-    raise TypeError
+import router
 
 
-ddb=boto3.resource('dynamodb')
-table=ddb.Table('products')
+ddb = boto3.resource("dynamodb")
+table = ddb.Table("products")
 
 
-def lambda_entrypoint(event:dict, context:dict):
-    return {
-        'event': table.scan().get('Items', [])
-    }
+@router.route("/products")
+def products():
+    pass
 
 
-# if __name__ == '__main__':
-#     print(lambda_entrypoint(None, None))
+def process(event: dict):
+    return {"event": event}
+    # return {'event': table.scan().get('Items', [])}
 
 
+def lambda_entrypoint(event: dict, context: dict):
 
-
-
+    return router.dispatch(event)

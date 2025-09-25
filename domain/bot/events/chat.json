@@ -1,0 +1,39 @@
+{
+  "headers": {
+    "x-amzn-tls-cipher-suite": "TLS_AES_128_GCM_SHA256",
+    "content-length": "16",
+    "x-amzn-tls-version": "TLSv1.3",
+    "x-amzn-trace-id": "Root=1-68d52261-0a78523c512603d43953988a",
+    "x-forwarded-proto": "https",
+    "host": "4perghuqcwqo5ioo5mvzzy6dtq0oarir.lambda-url.eu-west-3.on.aws",
+    "x-forwarded-port": "443",
+    "content-type": "application/json",
+    "x-forwarded-for": "217.65.139.219",
+    "accept": "*/*",
+    "user-agent": "curl/8.12.1"
+  },
+  "isBase64Encoded": false,
+  "rawPath": "//chat/sess1234",
+  "routeKey": "$default",
+  "requestContext": {
+    "accountId": "anonymous",
+    "timeEpoch": 1758798433249,
+    "routeKey": "$default",
+    "stage": "$default",
+    "domainPrefix": "4perghuqcwqo5ioo5mvzzy6dtq0oarir",
+    "requestId": "4ad781c5-2636-427e-952e-eabfcc5a3a37",
+    "domainName": "4perghuqcwqo5ioo5mvzzy6dtq0oarir.lambda-url.eu-west-3.on.aws",
+    "http": {
+      "path": "/chat/sess1234",
+      "protocol": "HTTP/1.1",
+      "method": "POST",
+      "sourceIp": "217.65.139.219",
+      "userAgent": "curl/8.12.1"
+    },
+    "time": "25/Sep/2025:11:07:13 +0000",
+    "apiId": "4perghuqcwqo5ioo5mvzzy6dtq0oarir"
+  },
+  "body": "{\"text\":\"hello\"}",
+  "version": "2.0",
+  "rawQueryString": ""
+}
