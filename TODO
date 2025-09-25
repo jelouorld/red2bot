@@ -1,5 +1,6 @@
 
 
+remove bot-> fetchers linear dependency 
+refactor permission model
+permission model
 
-- rm tf products infra dependency
-- create deploy orchestrator script
