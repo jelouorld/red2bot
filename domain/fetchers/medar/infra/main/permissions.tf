@@ -26,6 +26,13 @@ data "aws_iam_policy_document" "dynamodb_products_write_policy" {
     }
 } 
 
+data aws_iam_policy_document "kms_access" {
+    statement {
+        actions = ["kms:Decrypt",]
+        effect = "Allow"
+        resources = ["*"]
+    }
+}
 
 resource "aws_iam_role" "medar_fetcher_lambda_execution_role" {
     name = "medar_fetcher_lambda_execution_role"
@@ -44,6 +51,12 @@ resource "aws_iam_role_policy" "dynamodb_rw_policy" {
     name = "medar_fetcher_dynamodb_rw_policy"
     role = aws_iam_role.medar_fetcher_lambda_execution_role.id
     policy = data.aws_iam_policy_document.dynamodb_products_write_policy.json
+}
+
+resource "aws_iam_role_policy" "kms_access_inline_policy" {
+    name = "medar_fetcher_kms_access_policy"
+    role = aws_iam_role.medar_fetcher_lambda_execution_role.id
+    policy = data.aws_iam_policy_document.kms_access.json
 }
 
 
