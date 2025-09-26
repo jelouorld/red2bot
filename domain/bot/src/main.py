@@ -15,8 +15,13 @@ def init():
 
 
 @router.route("/chat/{session_id}", method="POST")
-def chat(session_id: str):
-    # execute all the langchain thing and return the response
+def chat(session_id: str, *, text=""):
+    # text inyected by router, comes from event[body]
+    # store thenew message ç
+    # rebuild the context 
+    # the product data is in products 
+    # execute all thelancahin orchestration
+    
     pass
 
 
