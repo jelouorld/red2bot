@@ -1,7 +1,4 @@
 
-[build-system]
-requires=["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
 
 
 
@@ -23,7 +20,8 @@ dev = [
     "pytest-cov>=7.0.0",
     "requests>=2.32.5",
     "isort",
-    "black", 
+    "black",
+    "ruff>=0.13.2",
 ]
 
 [tool.pytest.ini_options]
