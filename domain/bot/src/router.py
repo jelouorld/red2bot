@@ -52,7 +52,7 @@ def route(path: str, method: str = "POST"):
         if not path.startswith("/"):
             raise ValueError("Routes must start with /")
 
-        if not isinstance(method, str) or not method in ("POST", "GET"):
+        if not isinstance(method, str) or method not in ("POST", "GET"):
             raise ValueError("Methods must be POST or GET")
 
         __routes__[(path, method)] = func

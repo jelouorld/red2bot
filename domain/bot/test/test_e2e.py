@@ -4,7 +4,7 @@ import requests
 from requests.models import Response
 import boto3
 
-from main import PRODUCTS_TABLE
+from src import CHATS_TABLE
 
 
 def test_get_fails_on_init(init_url: str):
@@ -27,24 +27,29 @@ def post_succeeds_on_chat(chat_url: str):
     assert response.status_code == 200
 
 
-def _valid_uuid(string:str):
+def _valid_uuid(string: str):
     import uuid
+
     try:
         uuid.UUID(string)
         return True
     except ValueError:
         return False
-    
+
 
 def test_init_chat(init_url: str):
-    response:Response = requests.post(init_url)
+    response: Response = requests.post(init_url)
 
-    breakpoint('test')
 
-    assert response.status_code==201 
+    assert response.status_code == 201
 
-    session_id=response.json()["session_id"]
+    session_id = response.json()["session_id"]
 
     assert _valid_uuid(session_id)
 
-    assert PRODUCTS_TABLE.get_item(Key={"session_id": session_id})
+    entry: dict = CHATS_TABLE.get_item(Key={"session_id": session_id})
+
+    item: dict = entry["Item"]
+
+    assert "session_id" in item
+    assert item["session_id"] == session_id

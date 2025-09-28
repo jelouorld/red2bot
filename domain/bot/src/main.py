@@ -1,39 +1,37 @@
+import time
 import boto3
 import router
 import typing as tp
 import json
 import uuid
 
-
-DDB = boto3.resource("dynamodb")
-PRODUCTS_TABLE = DDB.Table("products")
-CHATS_TABLE = DDB.Table("chats")
-
+from src import CHATS_TABLE
 
 @router.route("/init", method="POST")
+
+
 def init():
-    # create a session_id
-    # return a session_id
     try:
         session_id = str(uuid.uuid4())
-        CHATS_TABLE.put_item(Item={"session_id": session_id})
+        CHATS_TABLE.put_item(Item={
+            "session_id": session_id,
+            "role": "system", 
+            "content": "[INIT]", 
+            "timestamp": int(time.time())
+        })
+        
         return {
-            "statusCode": 201, 
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": json.dumps({'session_id': session_id})
+            "statusCode": 201,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"session_id": session_id}),
         }
     except Exception as e:
         return {
-            "statusCode": 500, 
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": json.dumps({'error': str(e)})
+            "statusCode": 500,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"error": str(e)}),
         }
-    
-    
+
 
 @router.route("/chat/{session_id}", method="POST")
 def chat(session_id: str, *, text=""):
@@ -42,6 +40,13 @@ def chat(session_id: str, *, text=""):
     # rebuild the context
     # the product data is in products
     # execute all thelancahin orchestration
+
+    # entries = CHATS_TABLE.get_item(Key={"session_id": session_id})
+
+
+
+
+
     return {"session_id": session_id, "text": text}
 
 
