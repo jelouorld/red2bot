@@ -1,62 +1,49 @@
-"""
-We will quickly write our own simple router.
-In the future: replace with lambda powertools.
-
-basic interaction:
-
-$ curl url/init
-    in the backend:
-    route init
-    create a new chat entry with an ID
-    return an ID
-
-$ curl url/chat/session_iod"
-    params: message: str;
-    # execute all the langchain thing and return the response
-    return response
-$
-
-"""
-
 import functools
 from inspect import signature
+import json
 import typing as tp
 
 import exceptions as ex
 
-"""
-    (path, http_method) -> handler funciton
-"""
+JSONStr: tp.TypeAlias = str
+
+
 __routes__: tp.Dict[tp.Tuple[str, str], tp.Callable] = {}
 
 
-def _resolve_template_kwargs(path: str, template: str) -> str:
-    path_tokens = path.split("/")
-    template_tokens = template.split("/")
+def _resolve_template_args(
+    handler_params: dict, event: dict, path: str, template: str
+) -> str:
+    args: list[str] = []
+    if "event" in handler_params:
+        args.append(event)
 
-    kwargs: dict[str, str] = {}
-    for i, token in enumerate(template_tokens):
+    tempalte_tokens: list[str] = template.split("/")
+    path_tokens: list[str] = path.split("/")
+
+    for i, token in enumerate(tempalte_tokens):
         if token.startswith("{") and token.endswith("}"):
-            kwargs[token[1:-1]] = path_tokens[i]
-    return kwargs
+            args.append(path_tokens[i])
+
+    return args
+
+
+def _resolve_kwargs(event_body: JSONStr, keyword_only_params: dict) -> str:
+    body: dict = json.loads(event_body)
+    return dict(keyword_only_params) | body
 
 
 def _is_template(path: str) -> bool:
     return "{" in path and "}" in path
 
 
-def _starts_like(a: str, b: str, radix=4) -> bool:
+def _prefix_match(a: str, b: str, radix=4) -> bool:
     return a[:radix] == b[:radix]
-
-    # for i in range(len(a)):
-    #     if a[i] != b[i] and i<radix:
-    #         return False
-    # return True
 
 
 def _route_match(event_path: str, def_path: str) -> bool:
     if _is_template(def_path):
-        return _starts_like(event_path, def_path)
+        return _prefix_match(event_path, def_path)
     return event_path == def_path
 
 
@@ -81,7 +68,7 @@ def route(path: str, method: str = "POST"):
 
 Path = tp.TypeVar("Path", str, str)
 Method = tp.TypeVar("Method", str, str)
-Body = tp.TypeVar("Body", str, None)
+Body = tp.TypeVar("Body", dict, None)
 
 
 def _extract_vars(event: dict[str, tp.Any]) -> tp.Tuple[Method, Path, Body]:
@@ -89,33 +76,40 @@ def _extract_vars(event: dict[str, tp.Any]) -> tp.Tuple[Method, Path, Body]:
     http = request_context.get("http")
     event_path = http.get("path")
     event_method = http.get("method")
-    event_body = request_context.get("body")
+    event_body = event.get("body")
     return event_method, event_path, event_body
 
 
-def _dispach_handler(event: dict[str, tp.Any]) -> tp.Callable:
+def _resolve_handler(event: dict[str, tp.Any]) -> tp.Callable:
     event_method, event_path, _ = _extract_vars(event)
 
     for def_path, def_method in __routes__:
         if _route_match(event_path, def_path) and event_method == def_method:
-            return __routes__[(def_path, def_method)]
+            return __routes__[(def_path, def_method)], def_path
+
     raise ex.RoutingError(f"Route not found: {event_path} {event_method}")
 
 
 def dispatch(event: dict[str, tp.Any]) -> dict[str, tp.Any]:
-    handler = _dispach_handler(event)
+    # init dispatcher
+    handler, def_path = _resolve_handler(event)
     event_method, event_path, event_body = _extract_vars(event)
-
     parameters = signature(handler).parameters
 
-    if not parameters:
-        return handler()
+    # resolve template args
+    args = _resolve_template_args(parameters, event, event_path, def_path)
 
-    
+    # resolve keyword args
+    kwargs = {}
+    if event_body is not None:
 
-    args:list=[]
-    kwargs:dict={}
+        kwargs = _resolve_kwargs(
+            event_body,
+            keyword_only_params={
+                name: param
+                for name, param in parameters.items()
+                if param.kind == param.KEYWORD_ONLY
+            },
+        )
 
-    
-
-
+    return handler(*args, **kwargs)

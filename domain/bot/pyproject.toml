@@ -1,7 +1,4 @@
 
-
-
-
 [project]
 name = "red20bot"
 version = "0.1.0"
@@ -26,4 +23,9 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["test"]
-addopts="--cov=src"
+addopts="--cov=src --cov-branch --cov-report=term-missing"
+
+
+[tool.ruff.ini_options]
+addopts="--no-cache"
+

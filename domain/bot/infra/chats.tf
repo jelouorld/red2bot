@@ -10,6 +10,9 @@ resource "aws_dynamodb_table" "chats" {
     }
 
     # messages array at runtime 
+    # array of objects: ref: base/schemas/v1/chats.tf
+    # schema: <role: {assistant, user}, content: string, timestamp: timestamp>
+
 }
 
 

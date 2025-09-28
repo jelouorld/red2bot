@@ -2,6 +2,8 @@ import boto3
 import router
 import typing as tp
 import json
+import uuid
+
 
 DDB = boto3.resource("dynamodb")
 PRODUCTS_TABLE = DDB.Table("products")
@@ -12,8 +14,26 @@ CHATS_TABLE = DDB.Table("chats")
 def init():
     # create a session_id
     # return a session_id
-    return {'hello': 'world'}
-
+    try:
+        session_id = str(uuid.uuid4())
+        CHATS_TABLE.put_item(Item={"session_id": session_id})
+        return {
+            "statusCode": 201, 
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": json.dumps({'session_id': session_id})
+        }
+    except Exception as e:
+        return {
+            "statusCode": 500, 
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": json.dumps({'error': str(e)})
+        }
+    
+    
 
 @router.route("/chat/{session_id}", method="POST")
 def chat(session_id: str, *, text=""):
@@ -22,7 +42,7 @@ def chat(session_id: str, *, text=""):
     # rebuild the context
     # the product data is in products
     # execute all thelancahin orchestration
-    pass
+    return {"session_id": session_id, "text": text}
 
 
 @router.route("/event", method="GET")
@@ -34,5 +54,5 @@ def lambda_entrypoint(event: dict, _):  # context unused
     # cli invocation
     if not event:
         return {"cli_invocation": True}
-    return event
+
     return router.dispatch(event)
