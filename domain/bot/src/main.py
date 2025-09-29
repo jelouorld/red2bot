@@ -1,30 +1,30 @@
 import router
 import typing as tp
 
-import dataaccess
 import responses
-import ai
 import exceptions as ex
+
+import service
+
+chatservice = service.ChatService()
 
 @router.route("/init", method="POST")
 def init():
     try:
-        session_id: dataaccess.UUID4 = dataaccess.chats.init_conversation()
-        return responses.success_created(session_id)
-    except Exception as e:
-        # if os environ.debug:
-        return responses.error("Error initializing conversation: " + str(e))
-
-
+        session_id: str= chatservice.init_conversation()
+        return responses.success_conver_created(session_id)
+    except ValueError as e:
+        return responses.internal_error("Error initializing conversation: " + str(e))
+    
 @router.route("/chat/{session_id}", method="POST")
 def chat(session_id: str, *, text=""):
-
-    # validate session_id
-
-
-    conversation = dataaccess.chats.add_message(session_id, role="user", content=text)
-
-    return {"session_id": session_id, "text": text}
+    # validate stuff
+    try:
+        return responses.ok(chatservice.send_message(session_id, text))
+    except ValueError as e:
+        return responses.bad_request("Error sending message: " + str(e))
+    except Exception as e:
+        return responses.internal_error("Error processing request: " + str(e))
 
 
 @router.route("/event", method="GET")
@@ -36,7 +36,10 @@ def lambda_entrypoint(event: dict, _):  # context unused
     # cli invocation
     if not event:
         return {"cli_invocation": True}
+
     try:
         return router.dispatch(event)
     except ex.RoutingError as e:
-        return responses.error("Error routing request: " + str(e))
+        return responses.bad_request("Error routing request: " + str(e))
+    except Exception as e:
+        return responses.internal_error("Error processing request: " + str(e))

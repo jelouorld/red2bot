@@ -20,6 +20,13 @@ CleanDDBEntry: TypeAlias = dict
 # obeying the same implicit contract. Please, NOTICE the word "IMPLICIT"
 
 
+# TODO:
+# 1. Add guarded writes
+# 2. _chats._add_entry idempotent; at least in:
+#       a - init convercsation
+#       b - end conversation
+
+
 class _chats:
     TABLE = boto3.resource("dynamodb").Table("chats")
 
@@ -45,6 +52,16 @@ class _chats:
         )
         return result.get("Items", [])
 
+    @staticmethod
+    def exists(session_id: UUID4) -> bool:
+        response = _chats.TABLE.query(
+            KeyConditionExpression=boto3.dynamodb.conditions.Key("session_id").eq(
+                session_id
+            ),
+            Limit=1,
+        )
+        return len(response["Items"]) > 0
+
 
 class chats:
     @staticmethod
@@ -65,6 +82,10 @@ class chats:
     @staticmethod
     def end_conversation(session_id: UUID4) -> None:
         _chats._add_entry(session_id, role="system", content="[END]")
+
+    @staticmethod
+    def exists(session_id: UUID4) -> bool:
+        return _chats.exists(session_id)
 
 
 # low level products access layer

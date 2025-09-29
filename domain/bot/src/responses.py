@@ -3,7 +3,7 @@ import json
 from dataaccess import UUID4
 
 
-def success_created(session_id: UUID4) -> dict:
+def success_conver_created(session_id: UUID4) -> dict:
     return {
         "statusCode": 201,
         "headers": {"Content-Type": "application/json"},
@@ -11,7 +11,23 @@ def success_created(session_id: UUID4) -> dict:
     }
 
 
-def error(message: str) -> dict:
+def bad_request(message: str) -> dict:
+    return {
+        "statusCode": 400,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({"error": message}),
+    }
+
+
+def ok(message: str) -> dict:
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({"ai_response": message}),
+    }
+
+
+def internal_error(message: str) -> dict:
     return {
         "statusCode": 500,
         "headers": {"Content-Type": "application/json"},

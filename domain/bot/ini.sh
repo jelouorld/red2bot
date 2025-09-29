@@ -30,3 +30,9 @@ cd infra
 source ini.sh
 cd - 
 
+
+
+# export base session
+
+export CHAT_SESSION_ID='c23f4689-4d71-4ec0-9666-806970bb2580'
+

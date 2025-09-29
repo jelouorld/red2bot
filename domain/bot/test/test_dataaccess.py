@@ -22,6 +22,12 @@ def test_generate_conversation():
     assert len(conversation) == 4 + 2  # 4 messages + init + end messages1
 
 
+def test_chat_exists():
+    session_id = dataaccess.chats.init_conversation()
+    breakpoint()
+    assert dataaccess.chats.exists(session_id)
+
+
 def test_load_products():
     products = dataaccess.products.load()
     breakpoint()

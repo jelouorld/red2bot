@@ -109,9 +109,10 @@ def test_no_route(init_event):
         router.dispatch(init_event)
 
 
-def test_route_assembly(init_event: dict):
+def test_route_assembly():
     def init():
         return 1
 
     wrapped = router.route("/init")(init)
     assert wrapped() == 1
+
