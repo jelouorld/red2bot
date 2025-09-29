@@ -1,5 +1,3 @@
-from inspect import signature
-
 import pytest
 
 import router
@@ -14,7 +12,6 @@ def test__resolve_template_args(
     path: str = "/chat/session_id",
     template: str = "/chat/{session_id}",
 ):
-
     assert router._resolve_template_args(
         handler_params=handler_params, event=event, path=path, template=template
     ) == [event, "session_id"]
@@ -65,7 +62,6 @@ def test__resolve_handler(chat_event: dict, init_event: dict, event_event: dict)
 
 
 def test_chat_route_dispatch(chat_event):
-
     chat_event["body"] = '{"text": "text123"}'
     chat_event["requestContext"]["http"]["path"] = "/chat/session_id"
 
@@ -81,7 +77,6 @@ def test_chat_route_dispatch(chat_event):
 
 
 def test_init_and_event_route_dispatch(init_event: dict):
-
     def init():
         return {"hello": "world"}
 

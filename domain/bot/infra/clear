@@ -1,1 +1,0 @@
-{"errorMessage": "Unable to marshal response: Object of type LambdaContext is not JSON serializable", "errorType": "Runtime.MarshalError", "requestId": "be5b7172-32ed-44e6-96f3-c119c74c57f9", "stackTrace": []}

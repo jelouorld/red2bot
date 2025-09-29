@@ -10,7 +10,7 @@ JSONStr: tp.TypeAlias = str
 
 __routes__: tp.Dict[tp.Tuple[str, str], tp.Callable] = {}
 
-
+# raises malformed
 def _resolve_template_args(
     handler_params: dict, event: dict, path: str, template: str
 ) -> str:
@@ -18,10 +18,14 @@ def _resolve_template_args(
     if "event" in handler_params:
         args.append(event)
 
-    tempalte_tokens: list[str] = template.split("/")
+    template_tokens: list[str] = template.split("/")
     path_tokens: list[str] = path.split("/")
 
-    for i, token in enumerate(tempalte_tokens):
+    if len(template_tokens) != len(path_tokens):
+        raise ex.RoutingError("Could not resolve route template args")
+
+
+    for i, token in enumerate(template_tokens):
         if token.startswith("{") and token.endswith("}"):
             args.append(path_tokens[i])
 
@@ -96,13 +100,12 @@ def dispatch(event: dict[str, tp.Any]) -> dict[str, tp.Any]:
     event_method, event_path, event_body = _extract_vars(event)
     parameters = signature(handler).parameters
 
-    # resolve template args
+        # resolve template args
     args = _resolve_template_args(parameters, event, event_path, def_path)
 
     # resolve keyword args
     kwargs = {}
     if event_body is not None:
-
         kwargs = _resolve_kwargs(
             event_body,
             keyword_only_params={
@@ -111,5 +114,7 @@ def dispatch(event: dict[str, tp.Any]) -> dict[str, tp.Any]:
                 if param.kind == param.KEYWORD_ONLY
             },
         )
+
+
 
     return handler(*args, **kwargs)

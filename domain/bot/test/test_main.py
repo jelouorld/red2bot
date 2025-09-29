@@ -1,4 +1,4 @@
-from src.main import lambda_entrypoint
+from main import lambda_entrypoint
 
 
 def test_lambda_entrypoint():

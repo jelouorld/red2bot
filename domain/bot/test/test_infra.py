@@ -1,5 +1,4 @@
 import boto3
-import requests
 
 ddb = boto3.client("dynamodb")
 lambda_service = boto3.client("lambda")

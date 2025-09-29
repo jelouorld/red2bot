@@ -1,51 +1,28 @@
-import time
-import boto3
 import router
 import typing as tp
-import json
-import uuid
 
-from src import CHATS_TABLE
+import dataaccess
+import responses
+import ai
+import exceptions as ex
 
 @router.route("/init", method="POST")
-
-
 def init():
     try:
-        session_id = str(uuid.uuid4())
-        CHATS_TABLE.put_item(Item={
-            "session_id": session_id,
-            "role": "system", 
-            "content": "[INIT]", 
-            "timestamp": int(time.time())
-        })
-        
-        return {
-            "statusCode": 201,
-            "headers": {"Content-Type": "application/json"},
-            "body": json.dumps({"session_id": session_id}),
-        }
+        session_id: dataaccess.UUID4 = dataaccess.chats.init_conversation()
+        return responses.success_created(session_id)
     except Exception as e:
-        return {
-            "statusCode": 500,
-            "headers": {"Content-Type": "application/json"},
-            "body": json.dumps({"error": str(e)}),
-        }
+        # if os environ.debug:
+        return responses.error("Error initializing conversation: " + str(e))
 
 
 @router.route("/chat/{session_id}", method="POST")
 def chat(session_id: str, *, text=""):
-    # text inyected by router, comes from event[body]
-    # store thenew message
-    # rebuild the context
-    # the product data is in products
-    # execute all thelancahin orchestration
 
-    # entries = CHATS_TABLE.get_item(Key={"session_id": session_id})
+    # validate session_id
 
 
-
-
+    conversation = dataaccess.chats.add_message(session_id, role="user", content=text)
 
     return {"session_id": session_id, "text": text}
 
@@ -59,5 +36,7 @@ def lambda_entrypoint(event: dict, _):  # context unused
     # cli invocation
     if not event:
         return {"cli_invocation": True}
-
-    return router.dispatch(event)
+    try:
+        return router.dispatch(event)
+    except ex.RoutingError as e:
+        return responses.error("Error routing request: " + str(e))

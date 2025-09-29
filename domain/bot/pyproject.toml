@@ -1,6 +1,6 @@
 
 [project]
-name = "red20bot"
+name = "red2bot"
 version = "0.1.0"
 description = "Serverless conversational bot"
 readme = "README.md"
@@ -17,14 +17,12 @@ dev = [
     "pytest-cov>=7.0.0",
     "requests>=2.32.5",
     "isort",
-    "black",
     "ruff>=0.13.2",
 ]
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
 testpaths = ["test"]
-addopts="--cov=src --cov-branch --cov-report=term-missing"
-
+pythonpath = ["src"]
+addopts="--cov=src --cov-branch --cov-report=term-missing --pdbcls=IPython.terminal.debugger:TerminalPdb"
 
 
